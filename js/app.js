@@ -1,70 +1,129 @@
-function validar() {
-    // pegando o valor do nome pelos names
-    var nome = document.getElementById("nome");
-    var sobrenome = document.getElementById("sobrenome");
-    var email = document.getElementById("email");
-    var senha = document.getElementById("senha");
-    var telefone = document.getElementById("telefone");
-    var cep = document.getElementById("cep");
-    var sexo = document.getElementById("sexo");
-    var newsletter = document.getElementById("newsletter").checked;
+$(function() {
+    var operacao = "A"; //"A"=Adição; "E"=Edição
+    var indice_selecionado = -1; //Índice do item selecionado na lista
+    var tbClientes = localStorage.getItem("tbClientes"); // Recupera os dados armazenados
+    tbClientes = JSON.parse(tbClientes); // Converte string para objeto
 
-    // verificar se o nome está vazio
-    if (nome.value == "") {
-        alert("Nome não informado")
-            // Deixa o input com o focus
-        nome.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo sobrenome está vazio
-    if (sobrenome.value == "") {
-        alert("Sobrenome não informado")
-            // Deixa o input com o focus
-        sobrenome.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo email está vazio
-    if (email.value == "") {
-        alert("Email não informado")
-            // Deixa o input com o focus
-        email.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo senha está vazio
-    if (senha.value == "") {
-        alert("Senha não informado")
-            // Deixa o input com o focus
-        senha.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo telefone está vazio
-    if (telefone.value == "") {
-        alert("Telefone não informado")
-            // Deixa o input com o focus
-        telefone.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo cep está vazio
-    if (cep.value == "") {
-        alert("Cep não informado")
-            // Deixa o input com o focus
-        cep.focus()
-            // retorna a função e não olha as outras linhas
-        return;
-    }
-    // verificar se o campo sexo está vazio
-    if (sexo.value == "") {
-        alert("Sexo não informado")
-            // Deixa o input com o focus
-        sexo.focus()
-            // retorna a função e não olha as outras linhas
-        return;
+    if (tbClientes == null) { // Caso não haja conteúdo, iniciamos um vetor vazio
+        tbClientes = [];
     }
 
-    alert("Formulário enviado!");
+    $("#frmCadastro").on("submit", function() {
+        if (operacao == "A") {
+            return Adicionar(tbClientes);
+        } else {
+            return Editar(tbClientes, indice_selecionado);
+        }
+    });
+
+    Listar(tbClientes);
+
+    $("#tblListar").on("click", ".btnEditar", function() {
+        operacao = "E";
+        indice_selecionado = parseInt($(this).attr("alt"));
+        var cli = JSON.parse(tbClientes[indice_selecionado]);
+        $("#nome").val(cli.nome)
+        $("#sobrenome").val(cli.sobrenome),
+            $("#email").val(cli.email),
+            $("#senha").val(cli.senha),
+            $("#telefone").val(cli.telefone),
+            $("#cep").val(cli.cep),
+            $("#sexo").val(cli.sexo),
+            $("#nome").focus();
+        // $("#newsletter").val()
+
+    });
+
+    $("#tblListar").on("click", ".btnExcluir", function() {
+        indice_selecionado = parseInt($(this).attr("alt"));
+        Excluir(tbClientes, indice_selecionado);
+        Listar(tbClientes);
+    });
+});
+
+function Adicionar(tbClientes) {
+
+    var cliente = JSON.stringify({
+        nome: $("#nome").val(),
+        sobrenome: $("#sobrenome").val(),
+        email: $("#email").val(),
+        senha: $("#senha").val(),
+        telefone: $("#telefone").val(),
+        cep: $("#cep").val(),
+        sexo: $("#sexo").val(),
+        newsletter: $("#newsletter").val(),
+    });
+    tbClientes.push(cliente);
+    console.log("tbClientes - " + tbClientes);
+    localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+    alert("Registro adicionado.");
+    return true;
+}
+
+function Editar(tbClientes, indice_selecionado) {
+    tbClientes[indice_selecionado] = JSON.stringify({
+        nome: $("#nome").val(),
+        sobrenome: $("#sobrenome").val(),
+        email: $("#email").val(),
+        senha: $("#senha").val(),
+        telefone: $("#telefone").val(),
+        cep: $("#cep").val(),
+        sexo: $("#sexo").val(),
+
+    }); //Altera o item selecionado na tabela
+    localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+    alert("Informações editadas.")
+    operacao = "A"; //Volta ao padrão
+    return true;
+}
+
+function Excluir(tbClientes, indice_selecionado) {
+    tbClientes.splice(indice_selecionado, 1);
+    localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
+    alert("Registro excluído.");
+
+}
+
+function Listar(tbClientes) {
+    $("#tblListar").html("");
+    $("#tblListar").html(
+        "<thead>" +
+        "   <tr>" +
+        "   <th>Nome</th>" +
+        "   <th>Sobrenome</th>" +
+        "   <th>Email</th>" +
+        "   <th>Senha</th>" +
+        "   <th>Telefone</th>" +
+        "   <th>Cep</th>" +
+        "   <th>Sexo</th>" +
+        "   <th>Ação</th>" +
+        "   </tr>" +
+        "</thead>" +
+        "<tbody>" +
+        "</tbody>"
+    );
+    for (var i in tbClientes) {
+        var cli = JSON.parse(tbClientes[i]);
+        $("#tblListar tbody").append("<tr>");
+        $("#tblListar tbody").append("<td>" + cli.nome + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.sobrenome + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.email + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.senha + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.telefone + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.cep + "</td>");
+        $("#tblListar tbody").append("<td>" + cli.sexo + "</td>");
+        $("#tblListar tbody").append("<td><img src='img/edit.png' alt='" + i + "'class='btnEditar'/><img src='img/delete.png' alt='" + i + "' class='btnExcluir'/></td>");
+        $("#tblListar tbody").append("</tr>");
+    }
+}
+
+function limparCampos() {
+    nome.value = '';
+    sobrenome.value = '';
+    email.value = '';
+    senha.value = '';
+    telefone.value = '';
+    cep.value = '';
+    sexo.value = '';
+    newsletter.value = '';
 }

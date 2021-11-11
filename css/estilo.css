@@ -17,6 +17,41 @@ body {
     font-size: 14px;
 }
 
+header {
+    background: #BBBBBB;
+    padding: 20px 0;
+}
+
+.cabecalho {
+    position: relative;
+    width: 940px;
+    margin: 0 auto;
+}
+
+nav {
+    position: absolute;
+    top: 20px;
+    right: 150;
+}
+
+nav li {
+    display: inline;
+    margin: 0 0 0 15px;
+}
+
+nav a {
+    text-transform: uppercase;
+    color: #000000;
+    font-weight: bold;
+    font-size: 22px;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #C78C19;
+    text-decoration: underline;
+}
+
 .wrapper {
     display: flex;
     align-items: center;
@@ -88,4 +123,20 @@ body {
 
 .botao:hover {
     background: #5988bd;
+}
+
+table#tblListar {
+    border: 1px solid black;
+    width: 100%;
+}
+
+table#tblListar thead tr th {
+    border: 0px solid black;
+    padding: 10px;
+    margin: 0px;
+}
+
+table#tblListar tbody td {
+    text-align: center;
+    border-bottom: 0px solid black;
 }
