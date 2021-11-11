@@ -1,10 +1,10 @@
 $(function() {
-    var operacao = "A"; //"A"=Adição; "E"=Edição
-    var indice_selecionado = -1; //Índice do item selecionado na lista
-    var tbClientes = localStorage.getItem("tbClientes"); // Recupera os dados armazenados
-    tbClientes = JSON.parse(tbClientes); // Converte string para objeto
+    var operacao = "A";
+    var indice_selecionado = -1;
+    var tbClientes = localStorage.getItem("tbClientes");
+    tbClientes = JSON.parse(tbClientes);
 
-    if (tbClientes == null) { // Caso não haja conteúdo, iniciamos um vetor vazio
+    if (tbClientes == null) {
         tbClientes = [];
     }
 
@@ -70,10 +70,10 @@ function Editar(tbClientes, indice_selecionado) {
         cep: $("#cep").val(),
         sexo: $("#sexo").val(),
 
-    }); //Altera o item selecionado na tabela
+    });
     localStorage.setItem("tbClientes", JSON.stringify(tbClientes));
     alert("Informações editadas.")
-    operacao = "A"; //Volta ao padrão
+    operacao = "A";
     return true;
 }
 
